@@ -6,11 +6,7 @@ const expenseRoutes = require('./routes/expenseRoutes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({
-    origin: 'https://expense-tracker-ui-one.vercel.app',
-    methods: 'GET,POST,PUT,DELETE',
-    allowedHeaders: 'Content-Type,Authorization'
-}));
+app.use(cors({ origin: '*' }));
   
 app.use(express.json());
 
