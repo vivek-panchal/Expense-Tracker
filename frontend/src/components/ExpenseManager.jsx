@@ -11,7 +11,7 @@ const ExpenseManager = () => {
   const [totalExpenses, setTotalExpenses] = useState(0);
   const [editingExpense, setEditingExpense] = useState(null);
 
-  const BASE_URL= import.meta.env.VITE_BASE_URL;
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   useEffect(() => {
     fetchExpenses();
@@ -44,6 +44,10 @@ const ExpenseManager = () => {
     }
   };
 
+  const handleExpenseAdded = (newExpense) => {
+    setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
+  };
+
   const handleExpenseDelete = async (id) => {
     try {
       await axios.delete(`${BASE_URL}/api/expenses/${id}`);
@@ -59,22 +63,33 @@ const ExpenseManager = () => {
   };
 
   const handleUpdateExpense = (updatedExpense) => {
-    setExpenses(expenses.map(expense => 
-      expense._id === updatedExpense._id ? updatedExpense : expense
-    ));
+    setExpenses((prevExpenses) => 
+      prevExpenses.map(expense => 
+        expense._id === updatedExpense._id ? updatedExpense : expense
+      )
+    );
+    setEditingExpense(null);
+  };
+
+  const handleCancelEdit = () => {
     setEditingExpense(null);
   };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6 flex flex-col md:flex-row gap-6">
       <div className="md:w-1/3 p-4 bg-gray-800 rounded-lg shadow-lg">
-        <ExpenseForm editingExpense={editingExpense} onUpdateExpense={handleUpdateExpense} />
+        <ExpenseForm 
+          editingExpense={editingExpense} 
+          onExpenseAdded={handleExpenseAdded} 
+          onUpdateExpense={handleUpdateExpense} 
+          onCancelEdit={handleCancelEdit} 
+        />
       </div>
       <div className="md:w-2/3 flex flex-col gap-6">
         <div className="p-4 bg-gray-800 rounded-lg shadow-lg">
           <Filters filters={filters} onFilterChange={(e) => setFilters({ ...filters, [e.target.name]: e.target.value })} />
         </div>
-        <div className=" rounded-lg ">
+        <div className="rounded-lg">
           <ExpenseActions total={totalExpenses} onClear={() => setFilters({ category: '', date: '', startDate: '', endDate: '' })} />
         </div>
         <div className="p-4 bg-gray-800 rounded-lg shadow-lg">
