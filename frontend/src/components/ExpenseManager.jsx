@@ -35,7 +35,7 @@ const ExpenseManager = () => {
 
   const fetchTotalExpenses = async () => {
     try {
-      const response = await axios.get('${BASE_URL}/api/expenses/total', {
+      const response = await axios.get(`${BASE_URL}/api/expenses/total`, {
         params: { startDate: filters.startDate, endDate: filters.endDate }
       });
       setTotalExpenses(response.data.total);
